@@ -136,6 +136,14 @@ ENV/
 env.bak/
 venv.bak/
 
+# Research data and generated outputs
+data/
+checkpoints/
+outputs/
+release_archives/
+*.pth
+*.pt
+
 # Spyder project settings
 .spyderproject
 .spyproject

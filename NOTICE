@@ -1,0 +1,9 @@
+This repository includes a modified copy of the Uformer model implementation:
+
+  Uformer: A General U-Shaped Transformer for Image Restoration
+  Copyright (c) 2021 Zhendong Wang and contributors
+  https://github.com/ZhendongWang6/Uformer
+
+Uformer is distributed under the MIT License. Its license terms are compatible
+with and preserved in `LICENSES/Uformer.txt`. The original project also
+acknowledges MIRNet and Swin Transformer as implementation influences.

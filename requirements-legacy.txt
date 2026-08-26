@@ -1,0 +1,15 @@
+# Versions recovered from the local `uformer1` environment used with the
+# paper-era tree. CUDA/PyTorch wheels are platform-specific.
+torch==1.12.1
+torchvision==0.13.1
+numpy==1.26.1
+scipy
+scikit-image
+opencv-python
+PyYAML
+natsort
+tqdm
+einops==0.7.0
+timm==0.9.7
+tensorboard
+warmup-scheduler

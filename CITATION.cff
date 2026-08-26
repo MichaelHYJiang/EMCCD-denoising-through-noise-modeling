@@ -1,0 +1,19 @@
+cff-version: 1.2.0
+message: "If you use this software or data, please cite the ICLR 2025 paper."
+title: "Revolutionizing EMCCD Denoising through a Novel Physics-Based Learning Framework for Noise Modeling"
+type: software
+license: MIT
+date-released: 2025-01-01
+authors:
+  - family-names: Jiang
+    given-names: Haiyang
+  - family-names: Wazawa
+    given-names: Tetsuichi
+  - family-names: Sato
+    given-names: Imari
+  - family-names: Nagai
+    given-names: Takeharu
+  - family-names: Zheng
+    given-names: Yinqiang
+repository-code: "https://github.com/MichaelHYJiang/EMCCD-denoising-through-noise-modeling"
+url: "https://proceedings.iclr.cc/paper_files/paper/2025/hash/0cd1eec0eeaf5ce1bf6d8875a7c1d095-Abstract-Conference.html"

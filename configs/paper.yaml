@@ -1,0 +1,25 @@
+seed: 1234
+model:
+  architecture: Uformer_B
+  image_size: 512
+  input_channels: 1
+training:
+  epochs: 1000
+  batch_size: 4
+  patch_size: 512
+  optimizer: AdamW
+  learning_rate: 0.0002
+  weight_decay: 0.02
+  warmup_epochs: 3
+  historical_full_frame_noise: true
+  historical_first_epoch_eval_mode: true
+  workers: 4
+noise:
+  min_ratio: 1.0
+  max_ratio: 20.0
+  calibration_dir: data/calibration/runtime
+data:
+  train_dir: data/training/clean
+  validation_input_dir: data/benchmark/preprocessed_input
+  validation_gt_dir: data/benchmark/new_FPN_removed_GT
+output_dir: outputs/paper

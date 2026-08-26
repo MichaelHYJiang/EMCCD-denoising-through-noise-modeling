@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "note": "URLs are populated when the Google Drive release is uploaded.",
+  "assets": [
+    {"name":"params.npy","group":"runtime","path":"data/calibration/runtime/params.npy","size":200,"sha256":"651c1f1ab38affc0a6e9636d8ac3823f4823e3aa70a982e6b67ce8f48689f926","url":null,"license":"CC-BY-4.0"},
+    {"name":"base_FPN.npy","group":"runtime","path":"data/calibration/runtime/base_FPN.npy","size":2097280,"sha256":"474c86e90aa60de866451fc2832363b5e174f8ba086533c73027ce1e858b4fd4","url":null,"license":"CC-BY-4.0"},
+    {"name":"coeffs.npy","group":"runtime","path":"data/calibration/runtime/coeffs.npy","size":8388736,"sha256":"ccfe422edb3d97c212e92f40c6cb7c482d31cd3b86ccf3761353f03f7f1084ff","url":null,"license":"CC-BY-4.0"},
+    {"name":"S0-sigma-between-0.001s-0.2s.npy","group":"runtime","path":"data/calibration/runtime/S0-sigma-between-0.001s-0.2s.npy","size":83886208,"sha256":"b3d80b184ecb123280f767236ff86cc4d204e30b588f8ca6755598b59dca25af","url":null,"license":"CC-BY-4.0"},
+    {"name":"paper_model_best.pth","group":"checkpoints","path":"checkpoints/paper_model_best.pth","size":612784373,"sha256":"bae2af33916e32c210c142a77fcf9bc6011bf2611bd7dad5ce1e42f66785692b","url":null,"license":"MIT"},
+    {"name":"cell_finetuned_model_best.pth","group":"checkpoints","path":"checkpoints/cell_finetuned_model_best.pth","size":612784373,"sha256":"179ad3bd0e08bd8f219d230f5f4a460ce4def51afc6ffc2d5830f5c693bb01f7","url":null,"license":"MIT"},
+    {"name":"raw_calibration.tar.gz","group":"raw-calibration","path":"data/raw_calibration.tar.gz","size":null,"sha256":null,"url":null,"license":"CC-BY-4.0"},
+    {"name":"clean_training.tar.gz","group":"training","path":"data/clean_training.tar.gz","size":null,"sha256":null,"url":null,"license":"CC-BY-4.0"},
+    {"name":"canonical_benchmark.tar.gz","group":"benchmark","path":"data/canonical_benchmark.tar.gz","size":null,"sha256":null,"url":null,"license":"CC-BY-4.0"},
+    {"name":"cell_finetune.tar.gz","group":"fine-tuning","path":"data/cell_finetune.tar.gz","size":null,"sha256":null,"url":null,"license":"CC-BY-4.0"}
+  ]
+}

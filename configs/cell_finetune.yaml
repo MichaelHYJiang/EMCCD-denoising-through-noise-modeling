@@ -1,0 +1,7 @@
+base_config: paper.yaml
+training:
+  epochs: 2000
+  resume_from: checkpoints/paper_model_best.pth
+data:
+  train_dir: data/cell_finetune
+output_dir: outputs/cell_finetune
