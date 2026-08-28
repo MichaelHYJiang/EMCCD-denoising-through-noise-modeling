@@ -190,13 +190,13 @@ long-exposure reference):
     <th>Input</th><th>BM3D</th><th>ELD</th><th>Theoretical</th><th>SRDTrans</th><th>Ours</th><th>Ground truth</th>
   </tr>
   <tr>
-    <td><img src="fig/figures/results/00_input_40.png" alt="Noisy macroscopic input"></td>
-    <td><img src="fig/figures/results/01_bm3d_40.png" alt="BM3D result"></td>
-    <td><img src="fig/figures/results/02_eld_40.png" alt="ELD result"></td>
-    <td><img src="fig/figures/results/03_scirep_40.png" alt="Theoretical noise-model result"></td>
-    <td><img src="fig/figures/results/04_1_srdtrans_40.png" alt="SRDTrans result"></td>
-    <td><img src="fig/figures/results/04_emccd_40.png" alt="Our result"></td>
-    <td><img src="fig/figures/results/05_gt_40.png" alt="Ground truth"></td>
+    <td><img src="fig/figures/results/00_input_40.png" width="120" height="120" alt="Noisy macroscopic input"></td>
+    <td><img src="fig/figures/results/01_bm3d_40.png" width="120" height="120" alt="BM3D result"></td>
+    <td><img src="fig/figures/results/02_eld_40.png" width="120" height="120" alt="ELD result"></td>
+    <td><img src="fig/figures/results/03_scirep_40.png" width="120" height="120" alt="Theoretical noise-model result"></td>
+    <td><img src="fig/figures/results/04_1_srdtrans_40.png" width="120" height="120" alt="SRDTrans result"></td>
+    <td><img src="fig/figures/results/04_emccd_40.png" width="120" height="120" alt="Our result"></td>
+    <td><img src="fig/figures/results/05_gt_40.png" width="120" height="120" alt="Ground truth"></td>
   </tr>
 </table>
 
@@ -208,12 +208,12 @@ the cell-adapted checkpoint):
     <th>Input</th><th>ELD</th><th>Theoretical</th><th>SRDTrans</th><th>Ours</th><th>Ours + fine-tuning</th>
   </tr>
   <tr>
-    <td><img src="fig/figures/cell_results/00_input_00.png" alt="Noisy microscopy input"></td>
-    <td><img src="fig/figures/cell_results/02_eld_00.png" alt="ELD microscopy result"></td>
-    <td><img src="fig/figures/cell_results/03_scirep_00.png" alt="Theoretical noise-model microscopy result"></td>
-    <td><img src="fig/figures/cell_results/04_1_srdtrans_00.png" alt="SRDTrans microscopy result"></td>
-    <td><img src="fig/figures/cell_results/04_emccd_00.png" alt="Our microscopy result"></td>
-    <td><img src="fig/figures/cell_results/05_emccd_finetuned_00.png" alt="Our fine-tuned microscopy result"></td>
+    <td><img src="fig/figures/cell_results/00_input_00.png" width="120" height="120" alt="Noisy microscopy input"></td>
+    <td><img src="fig/figures/cell_results/02_eld_00.png" width="120" height="120" alt="ELD microscopy result"></td>
+    <td><img src="fig/figures/cell_results/03_scirep_00.png" width="120" height="120" alt="Theoretical noise-model microscopy result"></td>
+    <td><img src="fig/figures/cell_results/04_1_srdtrans_00.png" width="120" height="120" alt="SRDTrans microscopy result"></td>
+    <td><img src="fig/figures/cell_results/04_emccd_00.png" width="120" height="120" alt="Our microscopy result"></td>
+    <td><img src="fig/figures/cell_results/05_emccd_finetuned_00.png" width="120" height="120" alt="Our fine-tuned microscopy result"></td>
   </tr>
 </table>
 
