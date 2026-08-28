@@ -10,7 +10,11 @@ without requiring noisy/clean captures for every scene.
 [[Paper](https://proceedings.iclr.cc/paper_files/paper/2025/hash/0cd1eec0eeaf5ce1bf6d8875a7c1d095-Abstract-Conference.html)]
 [[Data and checkpoints](docs/DATA.md)]
 
-![Uformer architecture](fig/Uformer.png)
+![Overview of the physics-calibrated EMCCD noise model](<fig/figures/noise model overview v1.2.png>)
+
+The calibrated forward model converts clean microscopy images into paired
+synthetic EMCCD observations by modeling fixed-pattern noise, photon shot and
+electron-multiplication noise, blooming, readout noise, and quantization.
 
 ## Installation
 
