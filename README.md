@@ -25,32 +25,58 @@ pip install -e .
 
 For the paper's LPIPS benchmark, also install `pip install -e '.[benchmark]'`.
 
-The original Python 3.7-era package versions are recorded in
-[`requirements-legacy.txt`](requirements-legacy.txt), but are not recommended
-for a new installation.
+For closest numerical reproduction, create the recovered Python 3.9,
+PyTorch 1.12.1, and CUDA 11.3 environment instead:
+
+```bash
+conda env create -f environment-paper.yml
+conda activate emccd-paper
+pip install -e . --no-deps
+```
+
+[`requirements-legacy.txt`](requirements-legacy.txt) records the same
+paper-era Python dependencies for systems where Conda is unavailable.
 
 ## Download assets
 
-Release data live outside Git because the complete reproducibility set is over
-230 GB. Download and verify the runtime calibration and checkpoints with:
+Release data live outside Git: the downloadable archives total about 163 GB
+and expand to more than 230 GB. The downloader verifies every file against
+`assets/manifest.json`.
+Download the checkpoint and canonical benchmark, and extract the benchmark into
+the paths used below, with:
 
 ```bash
-python scripts/download_assets.py runtime checkpoints
+python scripts/download_assets.py runtime checkpoints benchmark --extract
+python scripts/check_setup.py benchmark
 ```
 
-See [Data](docs/DATA.md) for package layouts and the current release status,
-and [Camera Calibration](docs/CALIBRATION.md) for rebuilding runtime parameters.
+The resulting important paths are `checkpoints/paper_model_best.pth`,
+`data/calibration/runtime/`, and `data/benchmark/`. See [Data](docs/DATA.md) for
+all groups, disk requirements, extraction behavior, and checksum verification;
+see [Camera Calibration](docs/CALIBRATION.md) for auditing runtime parameters.
 The repository includes a small paired benchmark example and a separate
 microscopy input so the file conventions can be inspected without downloading
 the datasets.
 
 ## Inference
 
+Use the paper checkpoint for the paper-distribution example and canonical
+benchmark:
+
+```bash
+python scripts/infer.py \
+  --input examples/paper_pair/input.tif \
+  --output outputs/paper_example \
+  --weights checkpoints/paper_model_best.pth
+```
+
+Use the adapted checkpoint for cell microscopy:
+
 ```bash
 python scripts/infer.py \
   --input examples/microscopy/input.tif \
-  --output outputs/example \
-  --weights checkpoints/paper_model_best.pth
+  --output outputs/cell_example \
+  --weights checkpoints/cell_finetuned_model_best.pth
 ```
 
 Reproduce the canonical metrics directly from the checkpoint with:
@@ -62,20 +88,44 @@ CUDA_VISIBLE_DEVICES=0 python scripts/benchmark.py \
   --weights checkpoints/paper_model_best.pth --lpips
 ```
 
+Expected output for 224 images is approximately **48.59215 dB PSNR**,
+**0.985367 SSIM**, and **0.074232 LPIPS-VGG**. Small floating-point differences
+across CUDA, PyTorch, and LPIPS versions are expected. Use the paper checkpoint
+for this benchmark. The cell-fine-tuned checkpoint is intended for microscopy
+cell images and is not the checkpoint that produced the paper benchmark table.
+
 `scripts/evaluate.py` can rescore an existing output directory without loading
 the network. The benchmark intentionally mean-matches each input to its paired
 reference, matching the historical evaluation protocol; ordinary inference
 does not require a reference image.
 
 For arbitrary image sizes, inference uses overlapping 512×512 tiles. Inputs
-must be grayscale TIFFs in the camera’s 16-bit ADU range.
+must be grayscale TIFFs in the camera’s 16-bit ADU range. `--input` may be one
+TIFF or a directory; outputs retain the input filenames as uint16 TIFFs. If a
+camera offset has not already been removed, pass it in ADU with, for example,
+`--black-level 100`. Do not use `--black-level` on the supplied preprocessed
+benchmark.
 
 ## Training
 
-Extract assets to the paths in `configs/paper.yaml`, then run:
+Download and place every paper-training dependency automatically:
+
+```bash
+python scripts/download_assets.py runtime training benchmark --extract
+python scripts/check_setup.py paper-training
+```
+
+Then run the recovered two-GPU protocol (GPU 1 is deliberately excluded):
 
 ```bash
 CUDA_VISIBLE_DEVICES=0,2 python scripts/train.py --config configs/paper.yaml
+```
+
+For cell fine-tuning, first download the paper checkpoint and cell data:
+
+```bash
+python scripts/download_assets.py runtime checkpoints benchmark fine-tuning --extract
+python scripts/check_setup.py fine-tuning
 CUDA_VISIBLE_DEVICES=0,2 python scripts/train.py --config configs/cell_finetune.yaml
 ```
 
@@ -88,6 +138,20 @@ data: loss sum `1.319591` and validation PSNR `38.60086`, matching the archived
 `1.3196` and `38.6000`. Checkpoint resume and strict reload were also tested.
 Repeating all 1,000 epochs takes approximately 27 wall-clock hours on two RTX
 3090 GPUs (roughly 54 GPU-hours) in the recovered setup.
+
+Training writes `resolved_config.json`, `training.jsonl`, `model_latest.pth`,
+and `model_best.pth` under `outputs/paper/` or `outputs/cell_finetune/`. The
+released paper checkpoint is the authoritative artifact for reproducing the
+published metrics; a fresh long run follows the recovered stochastic protocol
+but is not guaranteed to produce bitwise-identical weights on different CUDA
+hardware.
+
+Resume an interrupted run, including optimizer state, with:
+
+```bash
+CUDA_VISIBLE_DEVICES=0,2 python scripts/train.py --config configs/paper.yaml \
+  --resume-from outputs/paper/model_latest.pth
+```
 
 ## Recovered result
 

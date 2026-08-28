@@ -1,5 +1,81 @@
 # Reproducibility Notes
 
+## End-to-end published-metric reproduction
+
+Run from the repository root. For the closest match to the verified result,
+use the recovered environment and GPU 0:
+
+```bash
+conda env create -f environment-paper.yml
+conda activate emccd-paper
+pip install -e . --no-deps
+python scripts/download_assets.py checkpoints benchmark --extract
+python scripts/check_setup.py benchmark
+CUDA_VISIBLE_DEVICES=0 python scripts/benchmark.py \
+  --input-dir data/benchmark/preprocessed_input_20240513 \
+  --gt-dir data/benchmark/gt \
+  --weights checkpoints/paper_model_best.pth \
+  --output-dir outputs/canonical_reproduction --lpips
+```
+
+The final JSON object should report `count: 224`, `checkpoint_epoch: 537`, and
+approximately:
+
+```json
+{
+  "psnr": 48.59215,
+  "ssim": 0.985367,
+  "lpips": 0.074232
+}
+```
+
+The archived paper values are 48.59228 / 0.985369 / 0.074235. Differences in
+the last few decimal places are expected across CUDA kernels and package builds.
+This is the reproduction path for the published accuracy result; do not use the
+cell-fine-tuned checkpoint for this benchmark. LPIPS may download its VGG
+feature weights on first use; subsequent runs use the local cache.
+
+## End-to-end training reproduction
+
+Install the same environment, then download the exact runtime calibration,
+clean training images, and historical training-validation pairs:
+
+```bash
+python scripts/download_assets.py runtime training benchmark --extract
+python scripts/check_setup.py paper-training
+CUDA_VISIBLE_DEVICES=0,2 python scripts/train.py --config configs/paper.yaml
+```
+
+GPU 1 is deliberately excluded. A quick integration run, useful before a
+27-hour training job, is:
+
+```bash
+CUDA_VISIBLE_DEVICES=0 python scripts/train.py --config configs/paper.yaml \
+  --epochs 1 --batch-size 1 --max-train-steps 1 --max-validation-items 2 \
+  --workers 0 --output-dir outputs/smoke
+```
+
+Do not compare the smoke-run loss or PSNR with paper results because it uses
+only one training batch and two validation items. A full first epoch uses all
+231 training images and 224 validation pairs. In the recovered two-GPU
+environment it produced initial validation PSNR 28.53652, epoch loss sum
+1.319591, and epoch-1 validation PSNR 38.60086.
+
+Training writes a resolved config, JSON-lines metric log, latest checkpoint,
+and best checkpoint under `outputs/paper/`. The historical run selected epoch
+537. Random seeds and historical quirks are preserved, but a fresh stochastic
+CUDA training run is not guaranteed to yield bitwise-identical weights.
+
+For the separate cell adaptation experiment:
+
+```bash
+python scripts/download_assets.py runtime checkpoints benchmark fine-tuning --extract
+python scripts/check_setup.py fine-tuning
+CUDA_VISIBLE_DEVICES=0,2 python scripts/train.py --config configs/cell_finetune.yaml
+```
+
+This resumes model and optimizer state from the epoch-537 paper checkpoint.
+
 ## Recovered experiment
 
 The public code was reconstructed from the paper-era working tree and its
@@ -93,6 +169,9 @@ executed behavior rather than uncommented exploratory alternatives.
 
 - The recovered `records` file mixes old preprocessing variants and duplicate
   commands; only values tied to a matching log/config are reported here.
+- The raw flat-field script reproduces an exploratory gain estimate, not the
+  final production gain fit; use the released checksum-verified `params.npy`
+  for result reproduction. See `docs/CALIBRATION.md`.
 - Full training and exact metric evaluation require the externally hosted data
   and a CUDA GPU. A paper training run used two GPUs.
 - Preliminary cooled-camera experiments informed exploration but were not part

@@ -21,7 +21,9 @@ def main():
     args = parser.parse_args()
     mapping = json.loads(args.file_list.read_text(encoding="utf-8"))[str(args.gain)]["biased"]
     samples = []
-    for exposure, pattern in sorted(mapping.items(), key=lambda item: float(item[0])):
+    # The released array preserves insertion order from file_list.json. Do not
+    # sort exposures: their index is sampled during historical training.
+    for exposure, pattern in mapping.items():
         if not args.min_exposure <= float(exposure) <= args.max_exposure:
             continue
         pattern_path = Path(pattern)
@@ -29,7 +31,10 @@ def main():
         files = sorted(glob.glob(resolved))
         if not files:
             raise FileNotFoundError(f"No frames match {resolved}")
-        frames = np.stack([tifffile.imread(path).astype(np.float32) for path in files])
+        # Preserve the archived pre-reduction float64 cast. Reducing uint16
+        # directly differs in the last floating-point bits; float32 differs
+        # materially and produces an incompatible runtime array.
+        frames = np.stack([tifffile.imread(path).astype(np.float64) for path in files])
         samples.append(np.stack([frames.mean(axis=0), frames.std(axis=0)]))
     if not samples:
         raise SystemExit("No exposures were selected")
