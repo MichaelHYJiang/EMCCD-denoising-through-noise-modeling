@@ -16,6 +16,64 @@ The calibrated forward model converts clean microscopy images into paired
 synthetic EMCCD observations by modeling fixed-pattern noise, photon shot and
 electron-multiplication noise, blooming, readout noise, and quantization.
 
+## Results
+
+### Quantitative comparison
+
+Results on the paper's 224-pair macroscopic EMCCD benchmark are shown below.
+Higher PSNR/SSIM and lower LPIPS are better. The best result in each column is
+bold.
+
+| Method | PSNR (dB) ↑ | SSIM ↑ | LPIPS ↓ |
+|---|---:|---:|---:|
+| Noisy input | 40.73 | 0.9173 | 0.4007 |
+| BM3D | 43.69 | 0.9662 | 0.1438 |
+| ELD | 43.90 | 0.9724 | 0.1187 |
+| Theoretical noise model | 46.44 | 0.9788 | 0.0987 |
+| SRDTrans | 44.48 | 0.9677 | 0.2116 |
+| **Ours** | **48.59** | **0.9854** | **0.0742** |
+
+The released checkpoint reproduces the last row at 48.59215 dB PSNR,
+0.985367 SSIM, and 0.074232 LPIPS-VGG; see
+[Reproducibility](docs/REPRODUCIBILITY.md) for the exact evaluation protocol.
+
+### Qualitative comparison
+
+Held-out macroscopic benchmark example (the ground-truth column is the paired
+long-exposure reference):
+
+<table>
+  <tr>
+    <th>Input</th><th>BM3D</th><th>ELD</th><th>Theoretical</th><th>SRDTrans</th><th>Ours</th><th>Ground truth</th>
+  </tr>
+  <tr>
+    <td><img src="fig/figures/results/00_input_40.png" alt="Noisy macroscopic input"></td>
+    <td><img src="fig/figures/results/01_bm3d_40.png" alt="BM3D result"></td>
+    <td><img src="fig/figures/results/02_eld_40.png" alt="ELD result"></td>
+    <td><img src="fig/figures/results/03_scirep_40.png" alt="Theoretical noise-model result"></td>
+    <td><img src="fig/figures/results/04_1_srdtrans_40.png" alt="SRDTrans result"></td>
+    <td><img src="fig/figures/results/04_emccd_40.png" alt="Our result"></td>
+    <td><img src="fig/figures/results/05_gt_40.png" alt="Ground truth"></td>
+  </tr>
+</table>
+
+Real microscopy example (no ground truth is available; the final column uses
+the cell-adapted checkpoint):
+
+<table>
+  <tr>
+    <th>Input</th><th>ELD</th><th>Theoretical</th><th>SRDTrans</th><th>Ours</th><th>Ours + fine-tuning</th>
+  </tr>
+  <tr>
+    <td><img src="fig/figures/cell_results/00_input_00.png" alt="Noisy microscopy input"></td>
+    <td><img src="fig/figures/cell_results/02_eld_00.png" alt="ELD microscopy result"></td>
+    <td><img src="fig/figures/cell_results/03_scirep_00.png" alt="Theoretical noise-model microscopy result"></td>
+    <td><img src="fig/figures/cell_results/04_1_srdtrans_00.png" alt="SRDTrans microscopy result"></td>
+    <td><img src="fig/figures/cell_results/04_emccd_00.png" alt="Our microscopy result"></td>
+    <td><img src="fig/figures/cell_results/05_emccd_finetuned_00.png" alt="Our fine-tuned microscopy result"></td>
+  </tr>
+</table>
+
 ## Installation
 
 Python 3.9–3.11 and a CUDA-capable PyTorch installation are recommended.
