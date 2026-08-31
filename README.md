@@ -86,7 +86,7 @@ python scripts/infer.py \
 Reproduce the canonical metrics directly from the checkpoint with:
 
 ```bash
-CUDA_VISIBLE_DEVICES=0 python scripts/benchmark.py \
+python scripts/benchmark.py \
   --input-dir data/benchmark/preprocessed_input_20240513 \
   --gt-dir data/benchmark/gt \
   --weights checkpoints/paper_model_best.pth --lpips
@@ -119,10 +119,10 @@ python scripts/download_assets.py runtime training benchmark --extract
 python scripts/check_setup.py paper-training
 ```
 
-Then run the recovered two-GPU protocol (GPU 1 is deliberately excluded):
+Then run the recovered training protocol:
 
 ```bash
-CUDA_VISIBLE_DEVICES=0,2 python scripts/train.py --config configs/paper.yaml
+python scripts/train.py --config configs/paper.yaml
 ```
 
 For cell fine-tuning, first download the paper checkpoint and cell data:
@@ -130,7 +130,7 @@ For cell fine-tuning, first download the paper checkpoint and cell data:
 ```bash
 python scripts/download_assets.py runtime checkpoints benchmark fine-tuning --extract
 python scripts/check_setup.py fine-tuning
-CUDA_VISIBLE_DEVICES=0,2 python scripts/train.py --config configs/cell_finetune.yaml
+python scripts/train.py --config configs/cell_finetune.yaml
 ```
 
 The paper configuration uses 512×512 patches, ratios sampled uniformly from
@@ -140,8 +140,9 @@ resumes the paper model for up to 2,000 epochs on the cell dataset. See
 The training path has been verified for a complete first epoch on the paper
 data: loss sum `1.319591` and validation PSNR `38.60086`, matching the archived
 `1.3196` and `38.6000`. Checkpoint resume and strict reload were also tested.
-Repeating all 1,000 epochs takes approximately 27 wall-clock hours on two RTX
-3090 GPUs (roughly 54 GPU-hours) in the recovered setup.
+Training time depends on the available accelerators, CUDA stack, and storage.
+The trainer uses CUDA by default and automatically enables PyTorch
+`DataParallel` when multiple CUDA devices are visible.
 
 Training writes `resolved_config.json`, `training.jsonl`, `model_latest.pth`,
 and `model_best.pth` under `outputs/paper/` or `outputs/cell_finetune/`. The
@@ -153,7 +154,7 @@ hardware.
 Resume an interrupted run, including optimizer state, with:
 
 ```bash
-CUDA_VISIBLE_DEVICES=0,2 python scripts/train.py --config configs/paper.yaml \
+python scripts/train.py --config configs/paper.yaml \
   --resume-from outputs/paper/model_latest.pth
 ```
 
